@@ -1,5 +1,6 @@
 package shjgroup.travelclubcoregrd.store.mapstore;
 
+import org.springframework.stereotype.Repository;
 import shjgroup.travelclubcoregrd.aggregate.club.TravelClub;
 import shjgroup.travelclubcoregrd.store.ClubStore;
 
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Repository
 public class ClubMapStore implements ClubStore {  // 엔티티 layer(계층)에서의 TravelClub 클래스 클럽정보를 저장할 저장소 구현 (ClubStore 인터페이스로 구현함)
 
     private Map<String, TravelClub> clubMap;  // 키 자료형: String, 값 자료형: TravelClub  // 키: 객체의id(clubId), 값: club객체(club)

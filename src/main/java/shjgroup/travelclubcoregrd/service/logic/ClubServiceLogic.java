@@ -1,5 +1,7 @@
 package shjgroup.travelclubcoregrd.service.logic;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 import shjgroup.travelclubcoregrd.aggregate.club.TravelClub;
 import shjgroup.travelclubcoregrd.service.ClubService;
 import shjgroup.travelclubcoregrd.service.sdo.TravelClubCdo;
@@ -8,10 +10,11 @@ import shjgroup.travelclubcoregrd.store.ClubStore;
 
 import java.util.List;
 
+@Service
 public class ClubServiceLogic implements ClubService {
 
     private ClubStore clubStore;  // ClubStore 인터페이스 타입의 필드(변수) 선언.
-
+    @Autowired
     public ClubServiceLogic(ClubStore clubStore) {  // ClubServiceLogic 은 ClubMapStore 을 알아야하는 관계이기때문에 이렇게 적어준다.
         this.clubStore = clubStore;
         // 아마 이렇게 적은 이유는, ClubServiceLogic과 ClubMapStore은 ClubStore 인터페이스를 사이에 두고 느슨한 결합을 유지해야하기때문에, DI에 ClubStore 인터페이스를 사용한것같다.
