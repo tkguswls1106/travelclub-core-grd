@@ -1,10 +1,12 @@
 package shjgroup.travelclubcoregrd.store.mapstore;
 
+import org.springframework.stereotype.Repository;
 import shjgroup.travelclubcoregrd.aggregate.club.CommunityMember;
 import shjgroup.travelclubcoregrd.store.MemberStore;
 
 import java.util.List;
 
+@Repository
 public class MemberMapStore implements MemberStore {
 
     @Override
