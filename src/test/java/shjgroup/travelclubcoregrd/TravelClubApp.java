@@ -3,12 +3,18 @@ package shjgroup.travelclubcoregrd;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.config.BeanDefinition;
+import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
+import org.springframework.context.support.ClassPathXmlApplicationContext;
+import shjgroup.travelclubcoregrd.aggregate.club.TravelClub;
 import shjgroup.travelclubcoregrd.service.ClubService;
 import shjgroup.travelclubcoregrd.service.logic.ClubServiceLogic;
 import shjgroup.travelclubcoregrd.service.sdo.TravelClubCdo;
 import shjgroup.travelclubcoregrd.store.ClubStore;
 import shjgroup.travelclubcoregrd.store.mapstore.ClubMapStore;
+
+import java.util.Arrays;
+import java.util.Date;
 
 public class TravelClubApp {
 
@@ -18,13 +24,12 @@ public class TravelClubApp {
     }
 
 
-    AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.class);
-
-
     // SpringConfig에 직접 Bean 등록 방법 사용시, 이미 등록되어있는 Bean들 목록 출력 코드
     @Test
     @DisplayName("모든 빈 출력하기")
     void findAllBean(){
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.class);
+
         String[] beanDefinitionNames = ac.getBeanDefinitionNames();
         for (String beanDefinitionName : beanDefinitionNames) {
             Object bean = ac.getBean(beanDefinitionName); //타입이 지정이안되어있어서 오브젝트로 꺼낸다.
@@ -35,6 +40,8 @@ public class TravelClubApp {
     @Test
     @DisplayName("애플리케이션 빈 출력하기")
     void findApplicationBean(){
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.class);
+
         String[] beanDefinitionNames = ac.getBeanDefinitionNames();
         for (String beanDefinitionName : beanDefinitionNames) {
             BeanDefinition beanDefinition =  ac.getBeanDefinition(beanDefinitionName);
@@ -51,7 +58,9 @@ public class TravelClubApp {
 
 
     @Test
-    void NewClubTest_springconfigDI() {  // SpringConfig 클래스에 직접 빈 등록방법으로 Bean 등록하여 DI 형성하였을때, 사용가능한 새로운 Club 등록 테스트 코드
+    void Test_NewClub_springconfigDI() {  // SpringConfig 클래스에 직접 빈 등록방법으로 Bean 등록하여 DI 형성하였을때, 사용가능한 새로운 Club 등록 테스트 코드
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.class);
+
         TravelClubCdo clubCdo = new TravelClubCdo("FirstTravelClub", "Test TravelClub");
         // 이제 밑의코드줄부터 ClubService를 통해서 객체를 넘겨주어야한다.
         // ClubServiceLogic 클래스의 registerClub 메소드를 호출하기위해 Service 관련 Bean을 먼저 스프링컨테이너에서 찾아와야한다.
@@ -73,15 +82,43 @@ public class TravelClubApp {
         // 마지막 과정으로, Store의 create 메소드가 실행되고 id를 리턴return해줌. 그러면 그 id값을 clubId 변수에 할당함.
         System.out.println("Test에서 등록될 새로운 TravelClub의 ID : " + clubId);
     }
-
-
     @Test
-    void NewClubTest_annotationDI() {  // Gradle에서 SpringConfig 클래스 없이 @Repository, @Service, @Autowired 로 Bean 등록하여 DI 형성하였을때, 사용가능한 새로운 Club 등록 테스트 코드
+    void Test_NewClub_componentDI() {  // Gradle에서 SpringConfig 클래스 없이 @Repository, @Service, @Autowired 로 컴포넌트 스캔으로 Bean 등록하여 DI 형성하였을때, 사용가능한 새로운 Club 등록 테스트 코드
                                        // 근데 이건 내가 직접 만든 코드라 약간 불확실함. 테스트 메소드 정상실행되긴함.
         TravelClubCdo clubCdo = new TravelClubCdo("FirstTravelClub", "Test TravelClub");
         ClubStore clubStore = new ClubMapStore();
         ClubService clubService = new ClubServiceLogic(clubStore);
         String clubId = clubService.registerClub(clubCdo);
         System.out.println("Test에서 등록될 새로운 TravelClub의 ID : " + clubId);
+    }
+
+
+    @Test
+    void Test_findClubById_springconfigDI() {  // SpringConfig 클래스에 직접 빈 등록방법으로 Bean 등록하여 DI 형성하였을때, 사용가능한 테스트 코드
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.class);
+
+        TravelClubCdo clubCdo = new TravelClubCdo("FirstTravelClub", "Test TravelClub");
+        ClubService clubService = ac.getBean("clubServiceLogic", ClubService.class);
+        String clubId = clubService.registerClub(clubCdo);
+        // Test_findClubById 메소드라도 registerClub 하는 과정까지는 동일하다.
+
+        TravelClub foundedClub = clubService.findClubById(clubId);  // registerClub으로 반환하여 할당한 clubId 값으로 findClubById로 검색하여, findClubById로 불러온 Club객체가 foundedClub 변수에 할당된다.
+        System.out.println("Club name : " + foundedClub.getName());
+        System.out.println("Club intro : " + foundedClub.getIntro());
+        System.out.println("Club foundationTime : " + new Date(foundedClub.getFoundationTime()));
+    }
+    @Test
+    void Test_findClubById_componentDI() {  // Gradle에서 SpringConfig 클래스 없이 @Repository, @Service, @Autowired 로 컴포넌트 스캔으로 Bean 등록하여 DI 형성하였을때, 사용가능한 테스트 코드
+                                            // 근데 이건 내가 직접 만든 코드라 약간 불확실함. 테스트 메소드 정상실행되긴함.
+        TravelClubCdo clubCdo = new TravelClubCdo("FirstTravelClub", "Test TravelClub");
+        ClubStore clubStore = new ClubMapStore();
+        ClubService clubService = new ClubServiceLogic(clubStore);
+        String clubId = clubService.registerClub(clubCdo);
+        // Test_findClubById 메소드라도 registerClub 하는 과정까지는 동일하다.
+
+        TravelClub foundedClub = clubService.findClubById(clubId);  // registerClub으로 반환하여 할당한 clubId 값으로 findClubById로 검색하여, findClubById로 불러온 Club객체가 foundedClub 변수에 할당된다.
+        System.out.println("Club name : " + foundedClub.getName());
+        System.out.println("Club intro : " + foundedClub.getIntro());
+        System.out.println("Club foundationTime : " + new Date(foundedClub.getFoundationTime()));
     }
 }
