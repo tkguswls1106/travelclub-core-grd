@@ -6,12 +6,18 @@ import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.AnnotationConfigApplicationContext;
 import org.springframework.context.support.ClassPathXmlApplicationContext;
+import shjgroup.travelclubcoregrd.aggregate.club.CommunityMember;
 import shjgroup.travelclubcoregrd.aggregate.club.TravelClub;
 import shjgroup.travelclubcoregrd.service.ClubService;
+import shjgroup.travelclubcoregrd.service.MemberService;
 import shjgroup.travelclubcoregrd.service.logic.ClubServiceLogic;
+import shjgroup.travelclubcoregrd.service.logic.MemberServiceLogic;
+import shjgroup.travelclubcoregrd.service.sdo.MemberCdo;
 import shjgroup.travelclubcoregrd.service.sdo.TravelClubCdo;
 import shjgroup.travelclubcoregrd.store.ClubStore;
+import shjgroup.travelclubcoregrd.store.MemberStore;
 import shjgroup.travelclubcoregrd.store.mapstore.ClubMapStore;
+import shjgroup.travelclubcoregrd.store.mapstore.MemberMapStore;
 
 import java.util.Arrays;
 import java.util.Date;
@@ -23,6 +29,7 @@ public class TravelClubApp {
 
     }
 
+    // ========================================= //
 
     // SpringConfig에 직접 Bean 등록 방법 사용시, 이미 등록되어있는 Bean들 목록 출력 코드
     @Test
@@ -56,9 +63,10 @@ public class TravelClubApp {
         }
     }
 
+    // ========================================= //
 
     @Test
-    void Test_NewClub_springconfigDI() {  // SpringConfig 클래스에 직접 빈 등록방법으로 Bean 등록하여 DI 형성하였을때, 사용가능한 새로운 Club 등록 테스트 코드
+    void Test_registerClub_springconfigDI() {  // SpringConfig 클래스에 직접 빈 등록방법으로 Bean 등록하여 DI 형성하였을때, 사용가능한 새로운 Club 등록 테스트 코드
         AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.class);
 
         TravelClubCdo clubCdo = new TravelClubCdo("FirstTravelClub", "Test TravelClub");
@@ -83,7 +91,7 @@ public class TravelClubApp {
         System.out.println("Test에서 등록될 새로운 TravelClub의 ID : " + clubId);
     }
     @Test
-    void Test_NewClub_componentDI() {  // Gradle에서 SpringConfig 클래스 없이 @Repository, @Service, @Autowired 로 컴포넌트 스캔으로 Bean 등록하여 DI 형성하였을때, 사용가능한 새로운 Club 등록 테스트 코드
+    void Test_registerClub_componentDI() {  // Gradle에서 SpringConfig 클래스 없이 @Repository, @Service, @Autowired 로 컴포넌트 스캔으로 Bean 등록하여 DI 형성하였을때, 사용가능한 새로운 Club 등록 테스트 코드
                                        // 근데 이건 내가 직접 만든 코드라 약간 불확실함. 테스트 메소드 정상실행되긴함.
         TravelClubCdo clubCdo = new TravelClubCdo("FirstTravelClub", "Test TravelClub");
         ClubStore clubStore = new ClubMapStore();
@@ -92,6 +100,7 @@ public class TravelClubApp {
         System.out.println("Test에서 등록될 새로운 TravelClub의 ID : " + clubId);
     }
 
+    // ========================================= //
 
     @Test
     void Test_findClubById_springconfigDI() {  // SpringConfig 클래스에 직접 빈 등록방법으로 Bean 등록하여 DI 형성하였을때, 사용가능한 테스트 코드
@@ -106,6 +115,7 @@ public class TravelClubApp {
         System.out.println("Club name : " + foundedClub.getName());
         System.out.println("Club intro : " + foundedClub.getIntro());
         System.out.println("Club foundationTime : " + new Date(foundedClub.getFoundationTime()));
+        // System.out.println(foundedClub.toString()); 도 가능하긴함.
     }
     @Test
     void Test_findClubById_componentDI() {  // Gradle에서 SpringConfig 클래스 없이 @Repository, @Service, @Autowired 로 컴포넌트 스캔으로 Bean 등록하여 DI 형성하였을때, 사용가능한 테스트 코드
@@ -120,5 +130,57 @@ public class TravelClubApp {
         System.out.println("Club name : " + foundedClub.getName());
         System.out.println("Club intro : " + foundedClub.getIntro());
         System.out.println("Club foundationTime : " + new Date(foundedClub.getFoundationTime()));
+        // System.out.println(foundedClub.toString()); 도 가능하긴함.
     }
+
+    // ========================================= //
+
+    @Test
+    void Test_registerMember_springconfigDI() {  // SpringConfig 클래스에 직접 빈 등록방법으로 Bean 등록하여 DI 형성하였을때, 사용가능한 테스트 코드
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.class);
+
+        MemberCdo memberCdo = new MemberCdo("test@naver.com", "Kim", "Test nickName", "010-0000-0000", "2000.01.01");
+        MemberService memberService = ac.getBean("memberServiceLogic", MemberService.class);  // getBean의 매개변수: ("등록해둔 Bean 이름", 찾아오는 타입)
+        String memberId = memberService.registerMember(memberCdo);
+        System.out.println("Test에서 등록될 새로운 CommunityMember의 ID : " + memberId);
+    }
+    @Test
+    void Test_registerMember_componentDI() {  // Gradle에서 SpringConfig 클래스 없이 @Repository, @Service, @Autowired 로 컴포넌트 스캔으로 Bean 등록하여 DI 형성하였을때, 사용가능한 테스트 코드
+                                              // 근데 이건 내가 직접 만든 코드라 약간 불확실함. 테스트 메소드 정상실행되긴함.
+        MemberCdo memberCdo = new MemberCdo("test@naver.com", "Kim", "Test nickName", "010-0000-0000", "2000.01.01");
+        MemberStore memberStore = new MemberMapStore();
+        MemberService memberService = new MemberServiceLogic(memberStore);
+        String memberId = memberService.registerMember(memberCdo);
+        System.out.println("Test에서 등록될 새로운 CommunityMember의 ID : " + memberId);
+    }
+
+    // ========================================= //
+
+    @Test
+    void Test_findMemberById_springconfigDI() {  // SpringConfig 클래스에 직접 빈 등록방법으로 Bean 등록하여 DI 형성하였을때, 사용가능한 테스트 코드
+        AnnotationConfigApplicationContext ac = new AnnotationConfigApplicationContext(SpringConfig.class);
+
+        MemberCdo memberCdo = new MemberCdo("test@naver.com", "Kim", "Test nickName", "010-0000-0000", "2000.01.01");
+        MemberService memberService = ac.getBean("memberServiceLogic", MemberService.class);  // getBean의 매개변수: ("등록해둔 Bean 이름", 찾아오는 타입)
+        String memberId = memberService.registerMember(memberCdo);
+        // Test_findMemberById 메소드라도 registerMember 하는 과정까지는 동일하다.
+
+        CommunityMember foundedMember = memberService.findMemberById(memberId);
+        System.out.println(foundedMember.toString());
+    }
+    @Test
+    void Test_findMemberById_componentDI() {  // Gradle에서 SpringConfig 클래스 없이 @Repository, @Service, @Autowired 로 컴포넌트 스캔으로 Bean 등록하여 DI 형성하였을때, 사용가능한 테스트 코드
+                                              // 근데 이건 내가 직접 만든 코드라 약간 불확실함. 테스트 메소드 정상실행되긴함.
+        MemberCdo memberCdo = new MemberCdo("test@naver.com", "Kim", "Test nickName", "010-0000-0000", "2000.01.01");
+        MemberStore memberStore = new MemberMapStore();
+        MemberService memberService = new MemberServiceLogic(memberStore);
+        String memberId = memberService.registerMember(memberCdo);
+        // Test_findMemberById 메소드라도 registerMember 하는 과정까지는 동일하다.
+
+        CommunityMember foundedMember = memberService.findMemberById(memberId);
+        System.out.println(foundedMember.toString());
+    }
+
+    // ========================================= //
+
 }

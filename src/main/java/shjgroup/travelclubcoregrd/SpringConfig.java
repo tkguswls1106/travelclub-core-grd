@@ -20,8 +20,8 @@ public class SpringConfig {
 //    public ClubStore clubStore() {
 //        return new ClubMapStore();
 //    }
-
-
+//
+//
 //    @Bean  // 스프링 빈을 내가 직접 등록할거야 라는 의미이다.
 //    public MemberServiceLogic memberServiceLogic() {
 //        return new MemberServiceLogic(memberStore());
