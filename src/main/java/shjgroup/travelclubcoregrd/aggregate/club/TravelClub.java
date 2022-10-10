@@ -1,5 +1,6 @@
 package shjgroup.travelclubcoregrd.aggregate.club;
 
+import com.google.gson.Gson;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -92,6 +93,7 @@ public class TravelClub extends Entity {
 
     public static void main(String[] args) {
         //
-        System.out.println(sample().toString());
+        // System.out.println(sample().toString());
+        System.out.println(new Gson().toJson(sample()));
     }
 }
