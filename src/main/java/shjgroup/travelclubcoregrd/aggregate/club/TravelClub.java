@@ -95,5 +95,10 @@ public class TravelClub extends Entity {
         //
         // System.out.println(sample().toString());
         System.out.println(new Gson().toJson(sample()));
+
+        NameValueList list = new NameValueList();
+        list.addNameValue("name", "Change Club name~~");  // name="name", value="Change Club name~~"
+        list.addNameValue("intro", "Change Club intro~~");  // name="intro", value="Change Club intro~~"
+        System.out.println(new Gson().toJson(list));
     }
 }
