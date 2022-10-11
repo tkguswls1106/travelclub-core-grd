@@ -1,11 +1,12 @@
 package shjgroup.travelclubcoregrd.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import shjgroup.travelclubcoregrd.aggregate.club.TravelClub;
 import shjgroup.travelclubcoregrd.service.ClubService;
 import shjgroup.travelclubcoregrd.service.sdo.TravelClubCdo;
+
+import java.util.List;
 
 @RestController  // 데이터가 담겨오는 방식은 @RequestParam("") 사용해서 url주소에 따라오느냐, 아니면 @RequestBody를 사용해서 http request의 body에 담겨오느냐인데, @RestController 이므로, json 사용으로 @RequestBody를 적어주자.
 // html 같은 뷰파일없이 바로 json으로 데이터를 보내 출력할거면, @Controller와 @ResponseBody가 결합된 @RestController 어노테이션을 컨트롤러 클래스 위에 적어두고,
@@ -25,6 +26,16 @@ public class ClubController {
         return clubService.registerClub(travelClubCdo);  // Controller 레이어에서 Service 레이어로 전달
                                                          // (추후에 서비스에서 clubStore.create() 메소드를 호출하며, Store 레이어로 전달하면, 최종적으로 DB에 등록 완료.)
                                                          // 즉, 레이어 전달 과정이 클라이언트요청->Controller->Service->Store 인것이다.
+    }
+
+    @GetMapping("/club/all")
+    public List<TravelClub> findAll() {  // 전체 클럽 조회
+        return clubService.findAll();
+    }
+
+    @GetMapping("/club/{clubId}")
+    public TravelClub find(@PathVariable String clubId) {  // @RequestParam은 url이 /hello-string?name=hihihi 이런식인 반면에, @PathVariable은 /club/1234 이런식이다.
+        return clubService.findClubById(clubId);
     }
 
 }

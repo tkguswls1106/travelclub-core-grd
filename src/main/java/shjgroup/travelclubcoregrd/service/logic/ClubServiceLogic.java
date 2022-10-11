@@ -42,6 +42,11 @@ public class ClubServiceLogic implements ClubService {
     }
 
     @Override
+    public List<TravelClub> findAll(){  // 전부 검색
+        return clubStore.retrieveAll();
+    }
+
+    @Override
     public void modify(String clubId, NameValueList nameValues) {  // 수정하는 용도이다. modify 메소드의 매개변수의 첫번째인자: 변경하고싶은 Club의 id값, 두번째인자: 변경할 내용값
         // 서비스는 스토어의 데이터베이스 접근 메소드를 호출해주는 중간 다리 역할이라는 사실을 잊지말자.
         TravelClub foundedClub = clubStore.retrieve(clubId);  // id값으로 변경하고자하는 Club객체를 찾아, foundedClub 이라는 새로운 Club객체에 할당시킴.

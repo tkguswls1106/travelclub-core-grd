@@ -41,6 +41,12 @@ public class ClubMapStore implements ClubStore {  // 엔티티 layer(계층)에�
        // 만약 중복허용이 아니라면 중복들을 리스트로 묶을필요가 없으므로, 메소드 반환자료형이 List<TravelClub>가 아닌, TravelClub 이었을것이다.
 
     @Override
+    public List<TravelClub> retrieveAll() {  // 전부 검색
+        //
+        return clubMap.values().stream().collect(Collectors.toList());
+    }
+
+    @Override
     public void update(TravelClub club) {  // 업데이트(수정) 용도인데, 참고로 매개변수 TravelClub club 객체 정보는 업데이트 된 데이터로 넘어오는것이다.
         clubMap.put(club.getId(), club);  // Map<String, TravelClub>
     }

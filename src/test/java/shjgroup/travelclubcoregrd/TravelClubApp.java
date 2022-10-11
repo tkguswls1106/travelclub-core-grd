@@ -164,7 +164,7 @@ public class TravelClubApp {
         MemberService memberService = ac.getBean("memberServiceLogic", MemberService.class);  // getBean의 매개변수: ("등록해둔 Bean 이름", 찾아오는 타입)
         String memberId = memberService.registerMember(memberCdo);
         // Test_findMemberById 메소드라도 registerMember 하는 과정까지는 동일하다.
-
+ 
         CommunityMember foundedMember = memberService.findMemberById(memberId);
         System.out.println(foundedMember.toString());
     }
