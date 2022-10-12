@@ -43,4 +43,4 @@ public class TravelClubJpo {  // 이 클래스는 데이터베이스 엔티티 �
         travelClub.setFoundationTime(this.foundationTime);  // TravelClub 클래스의 Setter 어노테이션덕에 setFoundationTime 메소드를 사용가능.  // this.~ 이것은 TravelClubJpo 클래스의 필드들이다.
         return travelClub;
     }
-}  // 여기까지는 spring data jpa를 적용한것이 아니라, 단순히 jpa hibernate 기술만 가지고 사용해본것이다.
+}  // 여기까지만 만든것이면, 아직 spring data jpa를 적용한것이 아니라, 단순히 jpa hibernate 기술만 가지고 사용해본것이다.

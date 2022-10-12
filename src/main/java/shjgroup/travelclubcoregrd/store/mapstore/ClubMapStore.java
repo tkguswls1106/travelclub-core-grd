@@ -10,7 +10,10 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Repository
+// @Repository
+// ClupMapStore 대신 ClubJpaStore 로 저장소를 변경할거라,
+// ClupMapStore 클래스의 @Repository 어노테이션 제거해서 빈등록 안되게 막고,
+// 대신 ClubJpaStore 클래스에 @Repository 어노테이션 붙여줘서 빈등록하게함.
 public class ClubMapStore implements ClubStore {  // 엔티티 layer(계층)에서의 TravelClub 클래스 클럽정보를 저장할 저장소 구현 (ClubStore 인터페이스로 구현함)
 
     private Map<String, TravelClub> clubMap;  // 키 자료형: String, 값 자료형: TravelClub  // 키: 객체의id(clubId), 값: club객체(club)
