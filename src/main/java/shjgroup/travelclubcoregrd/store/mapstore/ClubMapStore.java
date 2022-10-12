@@ -21,7 +21,7 @@ public class ClubMapStore implements ClubStore {  // 엔티티 layer(계층)에�
 
     @Override
     public String create(TravelClub club) {  // 만들 TravelClub의 club객체를값해쉬맵에 put해서 ClubMapStore 저장소에 저장함.
-        clubMap.put(club.getId(), club);  // 키: 객체의id, 값: club객체  // Entity 클래스의 Getter 어노테이션덕에 getId 사용가능.
+        clubMap.put(club.getId(), club);  // 키: 객체의id, 값: club객체  // TravelClub 클래스의 부모인 Entity 클래스의 Getter 어노테이션덕에 getId 사용가능.
         return club.getId();
     }
 

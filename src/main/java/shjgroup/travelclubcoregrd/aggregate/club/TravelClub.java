@@ -10,7 +10,7 @@ import shjgroup.travelclubcoregrd.shared.NameValueList;
 
 @Getter
 @Setter
-@NoArgsConstructor
+@NoArgsConstructor  // @NoArgsConstructor 어노테이션은 파라미터(매개변수)가 없는 기본 생성자 메소드를 생성해준다. TravelClubJpo(){} 메소드 말이다.
 public class TravelClub extends Entity {
     //
     private static final int MINIMUM_NAME_LENGTH =  3;
