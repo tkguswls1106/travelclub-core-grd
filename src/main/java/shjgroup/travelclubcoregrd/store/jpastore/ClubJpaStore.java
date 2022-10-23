@@ -3,6 +3,8 @@ package shjgroup.travelclubcoregrd.store.jpastore;
 import org.springframework.stereotype.Repository;
 import shjgroup.travelclubcoregrd.aggregate.club.TravelClub;
 import shjgroup.travelclubcoregrd.store.ClubStore;
+import shjgroup.travelclubcoregrd.store.jpastore.jpo.TravelClubJpo;
+import shjgroup.travelclubcoregrd.store.jpastore.repository.ClubRepository;
 
 import java.util.List;
 
@@ -17,9 +19,17 @@ public class ClubJpaStore implements ClubStore {
     // 순수 jpa에서 EntityManager를 사용하던 이러한 작업들을, 이제는 더욱 추상화하여 더 쉽게 쓸 수 있도록 해주는 방법인 spring data jpa 가 나와서 전자의 방법 대신 이걸 사용하면 된다.
     // 즉, 일일이 jpa에서 제공하는 EntityManager를 이용해서 데이터를 읽고 쓰는게 아니라, EntityManager에 대한 관리조차도 spring data 에게 맡기면 되게 되었다.
 
+    // ClubController --ClubService 인터페이스를 사이에 두고 느슨한 결합--> ClubServiceLogic --ClubStore 인터페이스를 사이에 두고 느슨한 결합--> ClubJpaStore --Jpa에서 제공하는 JpaRepository 인터페이스를 상속하는 ClubRepository 인터페이스를 사이에 두고 느슨한 결합--> 결국은 Jpa를 통해 Spring Data Jpa 의 DB에 접근 성공
+    private ClubRepository clubRepository;
+
+    public ClubJpaStore(ClubRepository clubRepository) {  // 마치 ClubServiceLogic 클래스가 ClubStore 인터페이스를 사이에두고 느슨한결합으로 서비스 레이어와 스토어 레이어를 의존관계로 연결시킨것처럼 비슷하다.
+        this.clubRepository = clubRepository;
+    }
+
     @Override
     public String create(TravelClub club) {
-        return null;
+        clubRepository.save(new TravelClubJpo(club));
+        return club.getId();
     }
 
     @Override
