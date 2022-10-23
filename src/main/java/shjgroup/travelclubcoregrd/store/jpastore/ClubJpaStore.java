@@ -5,8 +5,11 @@ import shjgroup.travelclubcoregrd.aggregate.club.TravelClub;
 import shjgroup.travelclubcoregrd.store.ClubStore;
 import shjgroup.travelclubcoregrd.store.jpastore.jpo.TravelClubJpo;
 import shjgroup.travelclubcoregrd.store.jpastore.repository.ClubRepository;
+import shjgroup.travelclubcoregrd.util.exception.NoSuchClubException;
 
 import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Repository
 // ClupMapStore 대신 ClubJpaStore 로 저장소를 변경할거라,
@@ -28,22 +31,37 @@ public class ClubJpaStore implements ClubStore {
 
     @Override
     public String create(TravelClub club) {
-        clubRepository.save(new TravelClubJpo(club));
+        clubRepository.save(new TravelClubJpo(club));  // save메소드는 ClubRepository 인터페이스의 부모 인터페이스인, Jpa에서 제공하는 JpaRepository 인터페이스가 가지고있는 연결된 여러 메소드들중 하나이다.
+
         return club.getId();
     }
 
     @Override
-    public TravelClub retrieve(String clubId) {
-        return null;
+    public TravelClub retrieve(String clubId) {  // id값으로 하나의 club객체를 찾는(검색하는) 용도이다.
+
+        Optional<TravelClubJpo> clubJpo = clubRepository.findById(clubId);  // findById메소드는 ClubRepository 인터페이스의 부모 인터페이스인, Jpa에서 제공하는 JpaRepository 인터페이스가 가지고있는 연결된 여러 메소드들중 하나이다.
+                                                                            // findById메소드를 command+마우스클릭으로 살펴보면, 리턴자료형타입이 Optional인것을 알 수 있다.
+        if(!clubJpo.isPresent()) {  // clubId를 가진 TravelClubJpo 클래스 객체가 DB에 존재하지않는다면
+            throw new NoSuchClubException(String.format("TravelClub(%s) is not found.", clubId));
+        }
+
+        return clubJpo.get().toDomain();  // return 할때는 Jpo객체를 도메인형식으로 바꾸어서 반환한다.
+    }
+
+    @Override
+    public List<TravelClub> retrieveAll() {  // 전부 검색
+        List<TravelClubJpo> clubJpos = clubRepository.findAll();
+        return clubJpos.stream().map(clupJpo -> clupJpo.toDomain()).collect(Collectors.toList());  // map()은 인자로 함수를 받으며, Stream의 요소를 다른 형태로 변경한다.
+                                                                                                   // 즉, clubJpos 리스트에 담긴 Jpo 객체 요소들을, 전부 도메인형태로 바꾸어, 리스트로 모아, List<TravelClub> 형식을 만들게 되는 것이다.
+
+        // return clubJpos.stream().map(TravelClubJpo::toDomain).collect(Collectors.toList());\
+        // 위의 return 코드 말고, 이 코드로도 대신 사용이 가능하다.
+        // ::는, :: 기준으로 왼쪽 객체의 오른쪽 메소드를 사용한다는 의미이다.
+        // 즉, clubJpos 리스트에 담긴 Jpo 객체 요소들을, TravelClubJpo 클래스 객체의 toDomain() 메소드를 사용하여 변환시켜준것이다.
     }
 
     @Override
     public List<TravelClub> retrieveByName(String name) {
-        return null;
-    }
-
-    @Override
-    public List<TravelClub> retrieveAll() {
         return null;
     }
 
