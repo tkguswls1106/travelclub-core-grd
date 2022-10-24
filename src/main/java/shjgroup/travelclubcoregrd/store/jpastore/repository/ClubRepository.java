@@ -5,6 +5,13 @@ import shjgroup.travelclubcoregrd.store.jpastore.jpo.TravelClubJpo;
 
 import java.util.List;
 
+// 아래의 ClubRepository 인터페이스의 경우처럼 인터페이스 JpaRepository를 상속받는 인터페이스의 경우,
+// 스프링 데이터 JPA가 인터페이스 ClubRepository의 메소드 구현체를 알아서 자동으로 만들어서 스프링 빈으로 자동 등록해준다.
+
+// 여기서 만약 extends를 JpaRepository<TravelClubJpo, String>, ClubStore 이라고 적었다면,
+// ClubStore라는 빈을 따로 등록할 필요가 없다. 스프링 jpa가 구현체를 자동으로 생성하여 bean으로 자동 등록해주었기 때문에 그냥 호출해서 사용하면된다.
+// 즉, 인터페이스 ClubRepository가 구현체를 자동으로 만들어줌으로써 그걸 가져다쓰기만하면되고, 이걸 SpringConfig에서 따로 Bean등록없이 ClubStore를 @Autowired 할수있게 해준다.
+
 public interface ClubRepository extends JpaRepository<TravelClubJpo, String> {  // 인터페이스가 인터페이스를 상속받을때에는 implements가 아닌, extends를 사용한다. 그리고 콤마(,)로 구분하여 다중 상속이 가능하다.
                                                                                 // <TravelClubJpo, String>는 <@Entity가 적혀있는 TravelClubJpo 클래스의 DB 엔티티, TravelClubJpo 엔티티의 pk id의 자료형인 String> 이다.  // 자료형 <class T,ID 식별자 pk 자료형>
 

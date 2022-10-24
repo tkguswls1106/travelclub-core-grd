@@ -23,6 +23,7 @@ public class ClubJpaStore implements ClubStore {
     // 즉, 일일이 jpa에서 제공하는 EntityManager를 이용해서 데이터를 읽고 쓰는게 아니라, EntityManager에 대한 관리조차도 spring data 에게 맡기면 되게 되었다.
 
     // ClubController --ClubService 인터페이스를 사이에 두고 느슨한 결합--> ClubServiceLogic --ClubStore 인터페이스를 사이에 두고 느슨한 결합--> ClubJpaStore --Jpa에서 제공하는 JpaRepository 인터페이스를 상속하는 ClubRepository 인터페이스를 사이에 두고 느슨한 결합--> 결국은 Jpa를 통해 Spring Data Jpa 의 DB에 접근 성공
+    // 참고로 그러면 JpaRepository 인터페이스에 기본적으로 등록되어있는 CRUD Jpa 접근 메소드와, ClubRepository 인터페이스에 직접 등록하여 정의한 메소드를 Jpa 접근 메소드로 활용할 수 있다.
     private ClubRepository clubRepository;
 
     public ClubJpaStore(ClubRepository clubRepository) {  // 마치 ClubServiceLogic 클래스가 ClubStore 인터페이스를 사이에두고 느슨한결합으로 서비스 레이어와 스토어 레이어를 의존관계로 연결시킨것처럼 비슷하다.
