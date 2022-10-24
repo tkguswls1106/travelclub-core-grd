@@ -54,7 +54,7 @@ public class ClubJpaStore implements ClubStore {
         return clubJpos.stream().map(clupJpo -> clupJpo.toDomain()).collect(Collectors.toList());  // map()은 인자로 함수를 받으며, Stream의 요소를 다른 형태로 변경한다.
                                                                                                    // 즉, clubJpos 리스트에 담긴 Jpo 객체 요소들을, 전부 도메인형태로 바꾸어, 리스트로 모아, List<TravelClub> 형식을 만들게 되는 것이다.
 
-        // return clubJpos.stream().map(TravelClubJpo::toDomain).collect(Collectors.toList());\
+        // return clubJpos.stream().map(TravelClubJpo::toDomain).collect(Collectors.toList());
         // 위의 return 코드 말고, 이 코드로도 대신 사용이 가능하다.
         // ::는, :: 기준으로 왼쪽 객체의 오른쪽 메소드를 사용한다는 의미이다.
         // 즉, clubJpos 리스트에 담긴 Jpo 객체 요소들을, TravelClubJpo 클래스 객체의 toDomain() 메소드를 사용하여 변환시켜준것이다.
@@ -62,21 +62,23 @@ public class ClubJpaStore implements ClubStore {
 
     @Override
     public List<TravelClub> retrieveByName(String name) {
-        return null;
+        List<TravelClubJpo> clubJpos = clubRepository.findAllByName(name);  // ClubRepository 인터페이스에 따로 정의해준 Jpa 메소드인 findAllByName 을 사용함.
+        return clubJpos.stream().map(TravelClubJpo::toDomain).collect(Collectors.toList());
     }
 
     @Override
     public void update(TravelClub club) {
-
+        clubRepository.save(new TravelClubJpo(club));  // save메소드는 ClubRepository 인터페이스의 부모 인터페이스인, Jpa에서 제공하는 JpaRepository 인터페이스가 가지고있는 연결된 여러 메소드들중 하나인데, create 용도만 있는게 아닌, update 용도로도 사용할 수 있다.
+        // save메소드로 인해서, select를 통해서 데이터가 존재하는지 확인을 먼저 하고, 데이터가 존재한다면 update를, 존재하지 않는다면 쿼리로 insert하여 create를 하게 된다.
     }
 
     @Override
     public void delete(String clubId) {
-
+        clubRepository.deleteById(clubId);
     }
 
     @Override
     public boolean exists(String clubId) {
-        return false;
+        return clubRepository.existsById(clubId);
     }
 }
